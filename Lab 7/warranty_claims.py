@@ -1,15 +1,54 @@
+
 def parse_claim(text):
-    plan, months = text.split(':')
-    return plan.strip().title(), float(months)
+    try:
+        if not isinstance(text, str):
+            return ("", 0.0)
+
+        parts = text.split(":")
+        if len(parts) != 2:
+            return ("", 0.0)
+
+        plan, months = parts
+        return plan.strip().title(), float(months)
+    except (ValueError, TypeError):
+        return ("", 0.0)
+
 
 def age_average(ages_csv):
-    values = [int(r) for r in ages_csv.split(',')]
-    return sum(values) // len(values)
+    try:
+        if not isinstance(ages_csv, str):
+            return 0
+
+        values = [
+            int(value.strip())
+            for value in ages_csv.split(",")
+            if value.strip()
+        ]
+
+        if not values:
+            return 0
+
+        return sum(values) / len(values)
+    except (ValueError, TypeError):
+        return 0
+
 
 def payable_charge(text):
-    charge, discount = text.split('|')
-    total = float(charge) * 1.18 - float(discount)
-    return max(total, 0)
+    try:
+        if not isinstance(text, str):
+            return 0
+
+        parts = text.split("|")
+        if len(parts) != 2:
+            return 0
+
+        charge, discount = parts
+        total = float(charge) * 1.18 - float(discount)
+
+        return max(total, 0)
+    except (ValueError, TypeError):
+        return 0
+
 
 def main():
     print("==== Running parse_claim ====")
@@ -27,5 +66,7 @@ def main():
     result = payable_charge(user_input)
     print("Payable Charge:", result)
 
+
 if __name__ == "__main__":
     main()
+	
